@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulador de Procesos</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    input {
+      margin: 5px;
+      padding: 5px;
+    }
+    table {
+      margin-top: 20px;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Simulador de Procesos</h1>
+
+  <input type="number" id="pid" placeholder="PID">
+  <input type="text" id="nombre" placeholder="Nombre">
+  <input type="number" id="memoria" placeholder="Memoria (MB)">
+  <input type="number" id="duracion" placeholder="Duración (seg)">
+  <button onclick="agregarProceso()">Agregar Proceso</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>PID</th>
+        <th>Nombre</th>
+        <th>Memoria</th>
+        <th>Duración</th>
+      </tr>
+    </thead>
+    <tbody id="tablaProcesos"></tbody>
+  </table>
+
+  <script>
+    let procesos = [];
+
+    function agregarProceso() {
+      const pid = document.getElementById("pid").value;
+      const nombre = document.getElementById("nombre").value;
+      const memoria = document.getElementById("memoria").value;
+      const duracion = document.getElementById("duracion").value;
+
+      if (pid === "" || nombre === "" || memoria === "" || duracion === "") {
+        alert("Por favor completa todos los campos");
+        return;
+      }
+
+      const proceso = {
+        pid: pid,
+        nombre: nombre,
+        memoria: memoria,
+        duracion: duracion
+      };
+
+      procesos.push(proceso);
+      console.log(procesos);
+      renderizarTabla();
+
+      document.getElementById("pid").value = "";
+      document.getElementById("nombre").value = "";
+      document.getElementById("memoria").value = "";
+      document.getElementById("duracion").value = "";
+    }
+
+    function renderizarTabla() {
+      const tabla = document.getElementById("tablaProcesos");
+      tabla.innerHTML = "";
+
+      procesos.forEach(function(p) {
+        const fila = document.createElement("tr");
+        fila.innerHTML = "<td>" + p.pid + "</td>" +
+                          "<td>" + p.nombre + "</td>" +
+                          "<td>" + p.memoria + "</td>" +
+                          "<td>" + p.duracion + "</td>";
+        tabla.appendChild(fila);
+      });
+    }
+  </script>
+
+</body>
+</html>
