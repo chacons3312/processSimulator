@@ -149,6 +149,7 @@
         console.log("Sin RAM disponible, proceso encolado:", proceso);
       } else {
         procesos.push(proceso);
+        iniciarTimeout(proceso);
         console.log(procesos);
       }
 
@@ -162,8 +163,20 @@
       document.getElementById("duracion").value = "";
     }
 
+    function iniciarTimeout(proceso) {
+      proceso.timeoutId = setTimeout(function() {
+        finalizarProceso(proceso.pid);
+      }, Number(proceso.duracion) * 1000);
+    }
+
     function finalizarProceso(pid) {
-      procesos = procesos.filter(function(p) { return p.pid !== pid; });
+      procesos = procesos.filter(function(p) {
+        if (p.pid === pid) {
+          clearTimeout(p.timeoutId);
+          return false;
+        }
+        return true;
+      });
       liberarCola();
       renderizarTabla();
       renderizarCola();
@@ -172,7 +185,9 @@
 
     function liberarCola() {
       while (cola.length > 0 && ramUsada() + Number(cola[0].memoria) <= RAM_LIMITE_MB) {
-        procesos.push(cola.shift());
+        const proceso = cola.shift();
+        procesos.push(proceso);
+        iniciarTimeout(proceso);
       }
     }
 
